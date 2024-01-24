@@ -1,0 +1,38 @@
+.message-windows-chat-admin{
+    padding: 20px 40px;
+    width:500px; 
+    height:400px; 
+    overflow:auto;
+    background-color:rgb(237, 237, 237);
+}
+.block-message{
+    position: relative;
+}
+.name{
+    color: rgb(126, 126, 126);
+    size: 10px;
+}
+.sender {
+    margin-left: auto;
+    width: 60%;
+}
+.recipient{
+    margin-right: auto;
+    width: 80%;
+}
+.status-mes{
+    font-size: 10px;
+    background-color: rgb(160, 72, 255);
+    color: rgb(255, 255, 255);
+    position: absolute;
+    left: -40px;
+    bottom: 5px;
+    padding: 2px 5px;
+    border-radius: 5px;
+    
+}
+form{
+    width:500px; 
+    text-align: right;
+    padding: 10px 0;
+}
