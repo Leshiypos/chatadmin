@@ -12,6 +12,7 @@ Author URI: @wp_dev
 */
 require_once dirname(__FILE__)."/includes/config.php"; // Переменные и настройки
 require_once dirname(__FILE__)."/includes/functions.php"; // Функции
+require_once dirname(__FILE__)."/servises/ajax.php"; // Ajax запросы
 
 // Запуск функции создания базы данных во время активации плагина
 register_activation_hook( __FILE__, 'db_istall_chat'); 
@@ -23,11 +24,16 @@ add_action( 'wp_enqueue_scripts', 'chatadm_load_frontend_styles'); //во фро
 function chatadm_load_admin_styles(){
     global $pluginchat_db_version; 
     wp_enqueue_style('chat-plugin-style-front', plugins_url( 'css/admin.css', __FILE__ ), array(), $pluginchat_db_version, "all" );
+    wp_enqueue_script( 'charadm-script-main-adminpanel', plugins_url('js/frontend.js'), array('jquery'), $pluginchat_db_version, true );
 }
 
 function chatadm_load_frontend_styles(){
     global $pluginchat_db_version; 
     wp_enqueue_style('chat-plugin-style-front', plugins_url( 'css/chat-style.css', __FILE__ ), array(), $pluginchat_db_version, "all" );
+    wp_deregister_script( 'jquery' );
+	wp_register_script( 'jquery', 'http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js');
+	wp_enqueue_script( 'jquery' );
+    wp_enqueue_script( 'charadm-script-main-frontend', plugins_url('chatadmin/js/frontend.js'), array('jquery'), $pluginchat_db_version, true );
 }
 
 /*
