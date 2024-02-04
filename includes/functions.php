@@ -37,4 +37,57 @@ function db_istall_chat(){
         update_option( "pluginchat_db_version", $pluginchat_db_version ); // также обновляет версию базы данных
     }
 } //КОНЕЦ функции db_istall_chat
+/*
+* Функция вывода окна чата на страницу во ФРОНТЭНД
+*/
+
+function display_chat_in_frontend(){
+    global $wpdb;
+    global $table_name;
+    global $cur_user_id;
+    global $frome_user_id; 
+?>
+<div class="wrap-wp-chatadmin" style="margin-left: 150px">
+	<div class="message-windows-chat-admin"  id="chat">
+<?php 
+	$messages = $wpdb -> get_results(
+	"SELECT ch.id,ch.message_date, ch.message, ch.status,ch.user_id, un.display_name 
+	FROM $table_name ch
+	INNER JOIN $wpdb->users un ON (ch.user_id=un.ID)
+	WHERE (ch.user_id = '$cur_user_id' AND ch.fromeuser_id = '$frome_user_id') OR (ch.user_id = '$frome_user_id' AND ch.fromeuser_id = '$cur_user_id')
+	ORDER BY ch.id",
+	ARRAY_A);
+	
+	foreach ($messages as $mes){ ?>
+	<div class="block-message <?php if ($mes['user_id'] == $cur_user_id ) {echo "sender";} else {echo "recipient";}?> ">
+		<div class="name"> <?php echo $mes['display_name']; ?> </div>
+		<div class="message" data-id="<?php echo $mes['id']; ?>"> <?php echo $mes['message']; ?> </div>
+
+		<?php if (($mes['user_id'] != $cur_user_id) && ($mes['status'] == "new")){?>
+		<div class="status-mes"> <?php echo $mes['status']; ?> </div>
+	<?php } ?>
+	</div>
+<?php	
+	}
+?>
+
+	</div>
+	<form id="form-chat-admin" action="" method="POST">
+		<input type="text" name="massage" required="required" autofocus id="message_win">
+		<input type="submit" name='send_message' value="отправить" id="send_message" data-user-id="<?php echo $cur_user_id;?>">
+
+	</form>
+</div>
+<?php 
+echo 'Текущий пользователь '.$cur_user_id.'<br>';
+echo 'Для кого '.$frome_user_id;
+?>
+
+
+<script type="text/javascript">                     //Прокрутка чата вниз
+  var block = document.getElementById("chat");
+  block.scrollTop = block.scrollHeight;
+</script>
+<?php 
+};
 ?>

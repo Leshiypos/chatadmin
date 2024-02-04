@@ -21,6 +21,8 @@ register_activation_hook( __FILE__, 'db_istall_chat');
 add_action( 'admin_enqueue_scripts', 'chatadm_load_admin_styles');  // в бэкэнде
 add_action( 'wp_enqueue_scripts', 'chatadm_load_frontend_styles'); //во фронте
 
+add_action('wp_footer', 'display_chat_in_frontend'); // выводим окно чата во фронтэнд
+
 function chatadm_load_admin_styles(){
     global $pluginchat_db_version; 
     wp_enqueue_style('chat-plugin-style-front', plugins_url( 'css/admin.css', __FILE__ ), array(), $pluginchat_db_version, "all" );

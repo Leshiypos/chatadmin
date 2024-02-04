@@ -24,9 +24,9 @@ function ajax_send_message_javascript(){ ?>
         $('#form-chat-admin').submit(function(evt){
             evt.preventDefault();
             var message = $('#message_win').val();
-            var currentUserName = $('#send_message').attr('data-username');
+            var currentUserID = $('#send_message').attr('data-user-id');
             var lastMessId = $('#chat .block-message:last-child .message'). attr('data-id');
-            console.log(currentUserName);
+            console.log(currentUserID);
             var fomatData = {
                 action : 'message_send',
                 message : message,
@@ -38,18 +38,19 @@ function ajax_send_message_javascript(){ ?>
                 type : 'POST', // тип запроса
                 success : function( data ){
                     data.forEach(function(val){
-                        var classMess = (val.display_name == currentUserName) ? 'sender' : 'recipient'; 
-                        console.log(val.display_name);
-                        var status = val.status == 'new' ? '<div class="status-mes"> new </div>' : '' ;
+                        var classMess = (val.user_id == currentUserID) ? 'sender' : 'recipient'; 
+                        //var status = val.status == 'new' ? '<div class="status-mes"> new </div>' : '' ;
                         var autput = '<div class="block-message  '+classMess+'">';
 
                         autput += '<div class="name">'+val.display_name+'</div>';
                         autput += '<div class="message" data-id="'+val.id+'">'+val.message+'</div>';
                         autput += '</div>';
-                        autput += status;
+                        //autput += status;
                         $('#chat').append(autput);
                     });
                         $('#message_win').val('');
+
+                        $('.wrap-wp-chatadmin .status-mes').remove();   // Удаляем статус нвого сообщения получателя
 
                         var block = document.getElementById("chat");    //прокручиваем область сообщений вниз каждый раз при добавлении нового 
                         block.scrollTop = block.scrollHeight;
@@ -66,7 +67,7 @@ function ajax_send_message_javascript(){ ?>
 
 
 /*
-* Отправка сообщения
+* Отправка сообщения ОБРАБОТЧИК
 */
 if( wp_doing_ajax() ){                                               //Подключаем AJAX только когда в этом есть смысл
     add_action( 'wp_ajax_message_send', 'ajax_send_message' );
@@ -80,7 +81,7 @@ function ajax_send_message(){
     global $frome_user_id;
 
     $mess = sanitize_text_field($_POST['message']);
-    $last_mess_id = $_POST['lastMessId'];
+    $last_mess_id = $_POST['lastMessId']; 
 
     $wpdb->insert($table_name, array(					            //вставляем данные сообщения в базу данных
 		'message_date' 	=> current_time('mysql'), 
@@ -89,7 +90,7 @@ function ajax_send_message(){
 		'fromeuser_id' 	=> $frome_user_id
 		 ));
 
-    $mess_id = $wpdb->insert_id;
+    //$mess_id = $wpdb->insert_id;
 
 	$wpdb->update($table_name, 
 			['status'=>'read'], 

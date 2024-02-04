@@ -36,3 +36,10 @@ form{
     text-align: right;
     padding: 10px 0;
 }
+.wrap-wp-chatadmin{
+    position: fixed;
+    top: 100px;
+    left: 100px;
+    padding: 50px;
+    background-color:azure;
+}
